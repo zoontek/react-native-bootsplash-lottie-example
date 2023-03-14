@@ -9,7 +9,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import LottieView from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {
   Colors,
@@ -21,14 +21,14 @@ import {
 
 const App = () => {
   const [animationIsVisible, setAnimationIsVisible] = React.useState(true);
-  const ref = React.useRef<LottieView>(null);
+  const ref = React.useRef<Lottie>(null);
   const progress = React.useRef<Animated.Value>(new Animated.Value(0));
   const opacity = React.useRef<Animated.Value>(new Animated.Value(1));
 
   React.useEffect(() => {
-    // small delay to ensure animation is loaded (see https://github.com/react-native-community/lottie-react-native/issues/274)
+    // delay to ensure animation is loaded (see https://github.com/react-native-community/lottie-react-native/issues/274)
     setTimeout(() => {
-      RNBootSplash.hide(); // hide the bootsplash immediately, without any fade
+      RNBootSplash.hide({fade: false}); // hide the bootsplash immediately, without any fade
 
       if (!progress.current) {
         return null;
@@ -51,12 +51,15 @@ const App = () => {
       ]).start(() => {
         setAnimationIsVisible(false);
       });
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
     <View style={{flex: 1}}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar
+        barStyle={animationIsVisible ? 'light-content' : 'dark-content'}
+        animated={true}
+      />
 
       <SafeAreaView>
         <ScrollView
@@ -104,20 +107,19 @@ const App = () => {
           style={[
             StyleSheet.absoluteFill,
             {
-              backgroundColor: '#FFF',
+              backgroundColor: '#000',
               alignItems: 'center',
               justifyContent: 'center',
               opacity: opacity.current,
             },
           ]}>
-          <LottieView
+          <Lottie
             ref={ref}
-            // in the NSBundle / assets folder, so it doesn't cross the bridge
-            source="bootsplash_logo_animation"
+            source={require('./assets/lottie_animation.json')}
             loop={false}
             progress={progress.current}
             resizeMode="contain"
-            style={{height: 75, width: 200}}
+            style={{height: 300, width: 300}}
           />
         </Animated.View>
       )}
