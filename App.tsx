@@ -27,7 +27,7 @@ const App = () => {
 
   React.useEffect(() => {
     // delay to ensure animation is loaded (see https://github.com/react-native-community/lottie-react-native/issues/274)
-    setTimeout(() => {
+    const unsubscribe = setTimeout(() => {
       RNBootSplash.hide({fade: false}); // hide the bootsplash immediately, without any fade
 
       if (!progress.current) {
@@ -52,6 +52,10 @@ const App = () => {
         setAnimationIsVisible(false);
       });
     }, 500);
+    
+    return () => {
+      clearTimeout(unsubscribe);
+    };
   }, []);
 
   return (
